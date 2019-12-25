@@ -5,6 +5,8 @@ if sys.version_info >= (3,):
 else:
     from io import BytesIO as StringIO
 
+import unittest
+
 class WouldHaveExitNonZero(Exception):
     def __init__(self, code):
         self.code = code
@@ -12,7 +14,7 @@ class WouldHaveExitNonZero(Exception):
     def __repr__(self):
         return "%s(%d)" % (self.__class__.__name__, self.code)
 
-class NagiosCheckTest(object):
+class NagiosCheckTest(unittest.TestCase):
     def setUp(self):
         self.outio = StringIO()
         self.errio = StringIO()
