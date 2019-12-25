@@ -5,6 +5,7 @@ from __future__ import print_function
 import datetime
 import gc
 import optparse
+import re
 import signal
 import sys
 import traceback
@@ -294,9 +295,14 @@ class PerformanceMetric(object):
     def __repr__(self):
         return self.output()
 
+    def quote(self, label):
+        if re.match(r'^\w+$', label):
+            return label
+        return "'%s'" % label
+
     def output(self):
-        return ("%s=%s%s;%s;%s;%s;%s;" %
-                (self.label, self.value, self.unit,
+        return ("%s=%s%s;%s;%s;%s;%s" %
+                (self.quote(self.label), self.value, self.unit,
                  self.warning_threshold, self.critical_threshold,
                  self.minimum, self.maximum))
 
