@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-__version__ = '0.1.6'
+from __future__ import print_function
 
 import datetime
 import gc
@@ -8,6 +8,8 @@ import optparse
 import signal
 import sys
 import traceback
+
+__version__ = '0.1.6'
 
 class Status(Exception):
     """Stores check status.
@@ -78,7 +80,8 @@ class Status(Exception):
 
         # And now the inverse...
         self.i_map = {}
-        for k, v in self.s_map.iteritems():
+
+        for k, v in self.s_map.items():
             self.i_map[v] = k
 
         if isinstance(status, int):
@@ -250,22 +253,22 @@ class NagiosCheck(object):
                 raise Status('unknown', "%s.check() returned without "
                              "raising %s.Status" %
                              (self.__class__.__name__, __name__))
-            except UsageError, e:
+            except UsageError as e:
                 msg = str(e)
                 if msg != "":
-                    print >>self.err, "%s\n" % msg
+                    print("%s\n" % msg, file=self.err)
                 self.parser.print_usage()
                 self.exit_cb(2)
-            except Status, e:
+            except Status as e:
                 raise
-            except SystemExit, e:
+            except SystemExit as e:
                 self.exit_cb(e.code)
-            except Exception, e:
+            except Exception as e:
                 raise Status('unknown',
                              "Unhandled Python exception: %r" % e)
             self.exit_cb(Status.EXIT_UNKNOWN)
-        except Status, s:
-            print >>self.out, s.output(self.verbosity)
+        except Status as s:
+            print(s.output(self.verbosity), file=self.out)
             self.exit_cb(s.status)
 
 class PerformanceMetric(object):

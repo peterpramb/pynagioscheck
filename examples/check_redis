@@ -27,7 +27,7 @@ class RedisCheck(NagiosCheck):
         try:
             r = redis.Redis(host, port)
             info = r.info()
-        except redis.exceptions.RedisError, e:
+        except redis.exceptions.RedisError as e:
             raise Status('critical', str(e))
         raise Status('ok', (
           'Redis is up',

@@ -1,4 +1,9 @@
-from StringIO import StringIO
+import sys
+
+if sys.version_info >= (3,):
+    from io import StringIO
+else:
+    from io import BytesIO as StringIO
 
 class WouldHaveExitNonZero(Exception):
     def __init__(self, code):

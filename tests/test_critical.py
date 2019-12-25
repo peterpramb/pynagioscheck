@@ -20,7 +20,7 @@ class TestCritical(NagiosCheckTest):
 
         try:
             self.run_check()
-        except WouldHaveExitNonZero, e:
+        except WouldHaveExitNonZero as e:
             assert e.code == Status.EXIT_CRITICAL
             raise
 
