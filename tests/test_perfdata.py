@@ -52,7 +52,7 @@ class TestPerfdata(NagiosCheckTest):
 
         # Test that perfdata appears where it is supposed to appear...
         assert self.out_lines[0].find("|") != -1
-        assert self.out_lines[0].find("flibs=10;;;;;") != -1
+        assert self.out_lines[0].find("flibs=10;;;;") != -1
 
         # ...and not where it is not supposed to appear.
         for line in self.out_lines[1:]:
