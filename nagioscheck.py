@@ -17,16 +17,16 @@ class Status(Exception):
 
     Usage:
 
-    - Without perfdata::
+    - Without perfdata:
 
           Status(nagioscheck.Status.EXIT_OK, "Happy days")
 
-    - With perfdata::
+    - With perfdata:
 
           Status(nagioscheck.Status.EXIT_OK, "Happy days",
                  PerformanceMetric('Power Level', 9001, 'points'))
 
-    - This (less verbose) alternative is also acceptable::
+    - This (less verbose) alternative is also acceptable:
 
           Status('ok', "Happy days")
 
@@ -39,8 +39,8 @@ class Status(Exception):
     def __init__(self, status, msg, perfdata=None):
         """Signal check status.
 
-        Store either a single string or list of strings in `msg`.  If a
-        list, the individual items should correspond to::
+        Store either a single string or list of strings in `msg`. If a
+        list, the individual items should correspond to:
 
             msg[0]: A single line summary;
 
@@ -48,18 +48,18 @@ class Status(Exception):
 
             msg[2]: Multi-line output for configuration debugging;
 
-            msg[3]: Multi-line output for check script debugging.  This
-            item is automatically filled with a Python backtrace.  Use
+            msg[3]: Multi-line output for check script debugging. This
+            item is automatically filled with a Python backtrace. Use
             -vvv at the command line to view it.
 
-        All four list elements are not mandatory.  Requests for verbose
-        output will fall upwards until a suitable message is found.  For
+        All four list elements are not mandatory. Requests for verbose
+        output will fall upwards until a suitable message is found. For
         example, if `msg[0]` and `msg[2]` are defined, and output at
         verbosity level 1 (`msg[1]`) is requested, the string from
         `msg[0]` will be returned.
 
-        Perfdata is optional and can be supplied as a single object or a 
-        collection.  PerformanceMetric exists to abstract the textual 
+        Perfdata is optional and can be supplied as a single object or
+        a collection. PerformanceMetric exists to abstract the textual
         formatting of the perfdata string.
 
         """
@@ -154,7 +154,7 @@ class Status(Exception):
         return self.msg[verbosity]
 
 class UsageError(Exception):
-    """Raise me from inside your check() method if the user has not 
+    """Raise me from inside your check() method if the user has not
     supplied enough information to proceed.
 
     """
@@ -219,11 +219,11 @@ class NagiosCheck(object):
         raise NotImplementedError("You forgot to override check()!")
 
     def expired(self):
-        """Our parent has died.  Follow suit.
+        """Our parent has died. Follow suit.
 
         Our parent has terminated, probably because a timeout had
-        recently expired.  You can override this method to clean up
-        after yourself, but do it quickly.  There is absolutely no
+        recently expired. You can override this method to clean up
+        after yourself, but do it quickly. There is absolutely no
         guarantee that you will get anywhere useful before a `SIGKILL`
         comes hurtling down the pipe.
 
