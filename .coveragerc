@@ -1,8 +1,6 @@
 [run]
 branch = False
-source =
-    nagioscheck
-    tests
+source = nagioscheck
 
 [report]
 exclude_lines =

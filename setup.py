@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from setuptools import setup
 import nagioscheck
 
 setup(
@@ -18,7 +18,7 @@ Nagios Plug-in Development Guidelines and, more importantly, save
 valuable system administrator time.
     """,
     license = 'BSD',
-    platforms = [ 'Linux', 'Unix' ],
+    platforms = ['Linux', 'Unix'],
 
     classifiers = [
         'Development Status :: 4 - Beta',
@@ -29,5 +29,8 @@ valuable system administrator time.
     ],
 
     py_modules = ['nagioscheck'],
+
+    test_suite = 'nose.collector',
+    tests_require = ['coverage', 'nose'],
 )
 
