@@ -136,6 +136,14 @@ class Status(Exception):
 
         output_lines = output_bare.split("\n")
 
+        # Prepend service name and status to the first line of
+        # plugin output only.
+        if self.service is not None:
+            prefix = "%s %s%s " % (self.service.upper(),
+                                   self.i_map[self.status],
+                                   self.state_sep)
+            output_lines[0] = prefix + output_lines[0]
+
         # Append perfdata to the first line of plugin output only.
         if self.perfdata is not None:
             output_lines[0] += " |"
@@ -180,7 +188,12 @@ class NagiosCheck(object):
     - `NagiosCheck.version`: The release version of your check.
     - `NagiosCheck.check()`: Actual check logic.
 
+    You *should* override the following from your subclass:
+
+    - `NagiosCheck.service`: The service name of your check.
     """
+    service = None
+    state_sep = ':'
     usage = "[options]"
     version = '0.1.0'
 
@@ -192,6 +205,9 @@ class NagiosCheck(object):
         self.parser = (optparse.OptionParser(
                        usage="%%prog %s" % self.usage,
                        version="%%prog %s" % self.version))
+
+        Status.service = self.service
+        Status.state_sep = self.state_sep
 
         # All checks must implement the following options as per the 
         # Nagios plug-in development guidelines.

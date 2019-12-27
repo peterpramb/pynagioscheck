@@ -9,6 +9,7 @@ class SleepCheck(NagiosCheck):
     behaviour.
     
     """
+    service = 'sleep'
     version = '0.1.1'
 
     def __init__(self):

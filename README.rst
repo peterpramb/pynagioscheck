@@ -20,6 +20,9 @@ The long version:
 
     1. Subclass ``nagioscheck.NagiosCheck`` as ``YourCheck``.
 
+    #. Set ``YourCheck.service`` to the (short) name of your service check.
+       This is shown on the plugin output, together with the check state.
+
     #. Set ``YourCheck.version``.  I prefer the ``major.minor.patch`` 
        format, but you can use whatever you like.  Increment this 
        version number with every revision to your check script.
