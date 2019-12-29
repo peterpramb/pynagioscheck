@@ -1,34 +1,29 @@
 #!/usr/bin/env make
-#
 
-V := 0
-AT_0 := @
-AT_1 :=
-AT = $(AT_$(V))
+all:
+	@echo "Available targets: clean, distclean, tarballs, test(s)"
 
-SHELL := $(shell command -v bash 2>/dev/null)
+.PHONY: clean
+clean:
+	@echo "Cleaning up..."
+	@rm -Rf .coverage build
+	@find dist -depth -maxdepth 1 -type f -exec rm -rf '{}' +
+	@find . -depth -type d -name "__pycache__" -exec rm -Rf '{}' +
+	@find . -depth -type f -name "*.py[cod]" -exec rm -f '{}' +
 
-SOURCES := Makefile nagioscheck.py \
-    $(shell find tests -type f \
-	-not \( \
-	  -name '.*.swp' -or \
-	  -name '.*.pyc' -or \
-	  -name '__pycache__' \
-	\) \
-)
+.PHONY: distclean
+distclean: clean
+	@rm -Rf .eggs .tox htmlcov *.egg-info
 
-all: test-stamp
+.PHONY: tarballs
+tarballs: distclean
+	@echo "Building tarballs..."
+	@tox -e tarballs
 
-coverage: test-stamp
-	$(AT)coverage report -m | tee coverage
-
+.PHONY: test
 test: tests
 
-tests: test-stamp
-
-test-stamp: $(SOURCES)
-	$(AT)rm -f .coverage
-	$(AT)coverage run -m nose; echo
-	$(AT)touch $@
-
-.PHONY: all coverage test tests
+.PHONY: tests
+tests:
+	@echo "Running tests..."
+	@tox

@@ -1,8 +1,10 @@
 [run]
-branch = False
+branch = True
 source = nagioscheck
 
 [report]
+precision = 2
+show_missing = True
 exclude_lines =
     pragma: no cover
     def __repr__

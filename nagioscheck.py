@@ -81,7 +81,6 @@ class Status(Exception):
 
         # And now the inverse...
         self.i_map = {}
-
         for k, v in self.s_map.items():
             self.i_map[v] = k
 

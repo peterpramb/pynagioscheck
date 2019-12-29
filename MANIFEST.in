@@ -1,5 +1,8 @@
-include LICENSE
+include LICENSE.txt pyproject.toml
 graft dist
-recursive-exclude dist *.gz
 graft examples
-recursive-include tests *.py
+graft tests
+recursive-exclude dist *.egg *.whl
+recursive-exclude dist *.bz2 *.gz *.zip
+recursive-exclude tests __pycache__
+recursive-exclude tests *.py[cod]

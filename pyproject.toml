@@ -1,0 +1,65 @@
+[build-system]
+requires = ['setuptools>=28.8.0', 'wheel', 'tox>=3.8.0']
+build-backend = 'setuptools.build_meta'
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+minversion = 3.8.0
+requires =
+    tox-venv
+envlist =
+    clean
+    lint
+    py{27,35,36,37,38}
+    report
+skipsdist = True
+skip_missing_interpreters = False
+
+[testenv]
+commands =
+    {envpython} setup.py -q install -f
+    {envbindir}/coverage run -a -m nose -v
+deps =
+    setuptools>=28.8.0
+    pip>=9.0.0
+    wheel
+    twine
+    coverage
+    nose
+depends =
+    py{27,35,36,37,38}: clean
+    report: py{27,35,36,37,38}
+
+[testenv:clean]
+commands =
+    {envbindir}/coverage erase
+deps =
+    coverage
+skip_install = True
+
+[testenv:lint]
+commands =
+    {envbindir}/flake8
+    {envbindir}/pylint nagioscheck.py
+    {envbindir}/pydocstyle nagioscheck.py tests
+deps =
+    flake8
+    pylint
+    pydocstyle
+ignore_errors = True
+
+[testenv:report]
+commands =
+    {envbindir}/coverage html
+    {envbindir}/coverage report --fail-under=100
+deps =
+    coverage
+skip_install = True
+
+[testenv:tarballs]
+commands =
+    {envpython} setup.py sdist --formats=bztar,gztar,zip
+    {envpython} setup.py bdist_wheel
+    {envbindir}/twine check dist/nagioscheck*
+"""
