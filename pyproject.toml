@@ -1,17 +1,15 @@
 [build-system]
-requires = ['setuptools>=28.8.0', 'wheel', 'tox>=3.8.0']
+requires = ['setuptools>=24.2.0', 'wheel', 'tox>=3.8.0']
 build-backend = 'setuptools.build_meta'
 
 [tool.tox]
 legacy_tox_ini = """
 [tox]
 minversion = 3.8.0
-requires =
-    tox-venv
 envlist =
     clean
     lint
-    py{27,35,36,37,38}
+    py{26,27,34,35,36,37,38}
     report
 skipsdist = True
 skip_missing_interpreters = False
@@ -25,17 +23,17 @@ deps =
     pip>=9.0.0
     wheel
     twine
-    coverage
+    coverage<5
     nose
 depends =
-    py{27,35,36,37,38}: clean
-    report: py{27,35,36,37,38}
+    py{26,27,34,35,36,37,38}: clean
+    report: py{26,27,34,35,36,37,38}
 
 [testenv:clean]
 commands =
     {envbindir}/coverage erase
 deps =
-    coverage
+    coverage<5
 skip_install = True
 
 [testenv:lint]
@@ -54,7 +52,7 @@ commands =
     {envbindir}/coverage html
     {envbindir}/coverage report --fail-under=100
 deps =
-    coverage
+    coverage<5
 skip_install = True
 
 [testenv:tarballs]
