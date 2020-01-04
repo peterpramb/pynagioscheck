@@ -229,7 +229,8 @@ class NagiosCheck(object):
         self.parser.add_option('-v', '--verbose', action='count',
                                dest='verbosity')
 
-    def add_option(self, short, long=None, argument=False, desc=None):
+    def add_option(self, short, long=None, argument=False, desc=None,
+                   type=None, default=None, choices=None, meta=None):
         option_strings = []
         kwargs = {}
 
@@ -242,7 +243,12 @@ class NagiosCheck(object):
             kwargs['dest'] = short
         else:
             kwargs['dest'] = argument
+
         kwargs['help'] = desc
+        kwargs['type'] = type
+        kwargs['default'] = default
+        kwargs['choices'] = choices
+        kwargs['metavar'] = meta
 
         self.parser.add_option(*option_strings, **kwargs)
 
