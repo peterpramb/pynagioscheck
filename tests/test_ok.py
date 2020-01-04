@@ -1,5 +1,10 @@
+#!/usr/bin/env python
+#
+# pylint: disable=E0401,E1101,W0201
+
 from nagioscheck import NagiosCheck, Status
 from tests import NagiosCheckTest
+
 
 class SimpleOptimisticCheck(NagiosCheck):
     version = '1.2.3'
@@ -11,6 +16,7 @@ class SimpleOptimisticCheck(NagiosCheck):
 
     def check(self, opts, args):
         raise Status('ok', self.msg)
+
 
 class TestOk(NagiosCheckTest):
     def test_ok_does_not_open_with_status_prefix(self):

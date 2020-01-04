@@ -22,9 +22,9 @@ deps =
     setuptools>=28.8.0
     pip>=9.0.0
     wheel
-    twine
     coverage<5
     nose
+    twine
 depends =
     py{26,27,34,35,36,37,38}: clean
     report: py{26,27,34,35,36,37,38}
@@ -39,8 +39,10 @@ skip_install = True
 [testenv:lint]
 commands =
     {envbindir}/flake8
-    {envbindir}/pylint nagioscheck.py
-    {envbindir}/pydocstyle nagioscheck.py tests
+    {envbindir}/pylint --disable=C0103,C0114,C0115,C0116,R0201,R0205,R0801 \
+        --score=no nagioscheck.py tests
+    {envbindir}/pydocstyle --ignore=D101,D102,D103,D104,D105,D107,D203,D213 \
+        nagioscheck.py tests
 deps =
     flake8
     pylint

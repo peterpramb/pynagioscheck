@@ -24,9 +24,9 @@ try:
 except ImportError:
     from distutils.core import setup
 
-from io import open
-from os import path
-from nagioscheck import __version__ as version
+from io import open                             # noqa: E402
+from os import path                             # noqa: E402
+from nagioscheck import __version__ as version  # noqa: E402
 
 # Import README (the old way, for backward compatibility)
 basedir = path.abspath(path.dirname(__file__))

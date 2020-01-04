@@ -1,5 +1,10 @@
+#!/usr/bin/env python
+#
+# pylint: disable=E0401,E1101,W0201
+
 from nagioscheck import NagiosCheck, PerformanceMetric, Status
 from tests import NagiosCheckTest, WouldHaveExitNonZero
+
 
 class SimpleOptimisticCheck(NagiosCheck):
     version = '1.2.3'
@@ -12,6 +17,7 @@ class SimpleOptimisticCheck(NagiosCheck):
     def check(self, opts, args):
         raise Status('ok', self.msg)
 
+
 class SimplePerfdataCheck(NagiosCheck):
     version = '1.2.3'
 
@@ -22,19 +28,18 @@ class SimplePerfdataCheck(NagiosCheck):
 
     def check(self, opts, args):
         raise Status('critical',
-                     (self.msg,
-                      None,
-                      self.msg + "\n" + self.lines()),
-                      PerformanceMetric('flibs', 10))
+                     (self.msg, None, self.msg + "\n" + self.lines()),
+                     PerformanceMetric('flibs', 10))
 
     def lines(self):
-        """Return a multi-line string to simulate multi-line plugin 
+        """Return a multi-line string to simulate multi-line plugin
         output."""
         # 0
         # 1
         # [...]
         # 4
-        return "\n".join(map(lambda i: str(i), range(5)))
+        return "\n".join([str(i) for i in range(5)])
+
 
 class TestPerfdata(NagiosCheckTest):
     def test_no_perfdata_by_default(self):

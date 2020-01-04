@@ -1,6 +1,11 @@
-from nagioscheck import NagiosCheck, Status
+#!/usr/bin/env python
+#
+# pylint: disable=E0401,E1101,W0201
+
 from nose.tools import raises
+from nagioscheck import NagiosCheck, Status
 from tests import NagiosCheckTest, WouldHaveExitNonZero
+
 
 class SimplePessimisticCheck(NagiosCheck):
     version = '1.2.3'
@@ -12,6 +17,7 @@ class SimplePessimisticCheck(NagiosCheck):
 
     def check(self, opts, args):
         raise Status('critical', self.msg)
+
 
 class TestCritical(NagiosCheckTest):
     @raises(WouldHaveExitNonZero)

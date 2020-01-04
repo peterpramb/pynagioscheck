@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+#
+# pylint: disable=R0912,R0913,R1717,W0402
+
+"""Pynagioscheck: A Python framework for Nagios plugin developers."""
 
 from __future__ import print_function
 
@@ -11,6 +15,7 @@ import sys
 import traceback
 
 __version__ = '0.1.6'
+
 
 class Status(Exception):
     """Stores check status.
@@ -31,10 +36,11 @@ class Status(Exception):
           Status('ok', "Happy days")
 
     """
-    EXIT_OK       = 0
-    EXIT_WARNING  = 1
+
+    EXIT_OK = 0
+    EXIT_WARNING = 1
     EXIT_CRITICAL = 2
-    EXIT_UNKNOWN  = 3
+    EXIT_UNKNOWN = 3
 
     def __init__(self, status, msg, perfdata=None):
         """Signal check status.
@@ -63,34 +69,35 @@ class Status(Exception):
         formatting of the perfdata string.
 
         """
+        super(Status, self).__init__(msg)
+
         self.msg = [None] * 4
         self.perfdata = None
         self.status = self.EXIT_UNKNOWN
 
-        # This contraption generates a dictionary of valid status 
-        # constants from the `EXIT_*` class attributes defined at the 
-        # very top of this class.  We use this dict for validation, and 
+        # This contraption generates a dictionary of valid status
+        # constants from the `EXIT_*` class attributes defined at the
+        # very top of this class. We use this dict for validation, and
         # as a shortcut mechanism when a string is supplied as `status`.
-        self.s_map = dict(map(lambda x: (x.replace('EXIT_', ""),
-                                         getattr(Status, x),),
-                              filter(lambda x: x.startswith('EXIT_'),
-                                     dir(Status))))
+        self.s_map = dict([(s.replace('EXIT_', ''), getattr(Status, s),)
+                           for s in
+                           [x for x in dir(Status) if x.startswith('EXIT_')]])
 
         # Or in other words...
         assert self.s_map['OK'] == 0
 
         # And now the inverse...
         self.i_map = {}
-        for k, v in self.s_map.items():
+        for k, v in list(self.s_map.items()):
             self.i_map[v] = k
 
         if isinstance(status, int):
-            if status not in self.i_map.keys():
+            if status not in list(self.i_map.keys()):
                 raise ValueError("Invalid status code - see %s.%s" %
                                  (__name__, self.__class__.__name__))
             self.status = status
         elif isinstance(status, str):
-            if status.upper() not in self.s_map.keys():
+            if status.upper() not in list(self.s_map.keys()):
                 raise ValueError("Invalid status code - see %s.%s" %
                                  (__name__, self.__class__.__name__))
             self.status = self.s_map[status.upper()]
@@ -100,7 +107,7 @@ class Status(Exception):
 
         if isinstance(msg, str):
             self.msg[0] = msg
-        elif isinstance(msg, list) or isinstance(msg, tuple):
+        elif isinstance(msg, (list, tuple)):
             for i in range(4):
                 try:
                     if msg[i] is None:
@@ -117,7 +124,7 @@ class Status(Exception):
 
         if perfdata is not None:
             try:
-                map(None, perfdata) # Test iterability
+                iter(perfdata)  # Test iterability
                 self.perfdata = perfdata
             except TypeError:
                 self.perfdata = [perfdata]
@@ -154,18 +161,23 @@ class Status(Exception):
         return output
 
     def search_msg(self, verbosity=0):
-        if verbosity not in range(4):
+        if verbosity not in list(range(4)):
             raise ValueError("Verbosity should be one of 0, 1, 2, or 3")
         while self.msg[verbosity] is None and verbosity > 0:
             verbosity -= 1
         return self.msg[verbosity]
 
+
 class UsageError(Exception):
-    """Raise me from inside your check() method if the user has not
-    supplied enough information to proceed.
+    """Stores usage error.
+
+    Raise me from inside your check() method if the user has not
+    supplied enough or correct information to proceed.
 
     """
+
     def __init__(self, msg=""):
+        super(UsageError, self).__init__(msg)
         self.msg = str(msg)
 
     def __repr__(self):
@@ -175,8 +187,11 @@ class UsageError(Exception):
     def __str__(self):
         return self.msg
 
+
 class NagiosCheck(object):
-    """Subclass me and override `check()` to define your own Nagios
+    """Represents the Nagios check.
+
+    Subclass me and override `check()` to define your own Nagios
     check.
 
     See `examples/` for examples.
@@ -191,6 +206,7 @@ class NagiosCheck(object):
 
     - `NagiosCheck.service`: The service name of your check.
     """
+
     service = None
     state_sep = ':'
     usage = "[options]"
@@ -201,14 +217,14 @@ class NagiosCheck(object):
         self.out = out
         self.err = err
         self.exit_cb = exit_cb
-        self.parser = (optparse.OptionParser(
-                       usage="%%prog %s" % self.usage,
-                       version="%%prog %s" % self.version))
+        self.parser = \
+            (optparse.OptionParser(usage="%%prog %s" % self.usage,
+                                   version="%%prog %s" % self.version))
 
         Status.service = self.service
         Status.state_sep = self.state_sep
 
-        # All checks must implement the following options as per the 
+        # All checks must implement the following options as per the
         # Nagios plug-in development guidelines.
         self.parser.add_option('-v', '--verbose', action='count',
                                dest='verbosity')
@@ -252,12 +268,12 @@ class NagiosCheck(object):
             try:
                 (opts, args) = self.parser.parse_args(argv[1:])
 
-                self.verbosity = getattr(opts, 'verbosity') or 0
-                if self.verbosity > 3:
-                    self.verbosity = 3
+                verbosity = getattr(opts, 'verbosity') or 0
+                if verbosity > 3:
+                    verbosity = 3
 
-                # When the NRPE server forks us (`popen(3)`) and its 
-                # guardian process dies from `command_timeout` expiry, 
+                # When the NRPE server forks us (`popen(3)`) and its
+                # guardian process dies from `command_timeout` expiry,
                 # the process group should get `SIGTERM`'d.
                 old_handler = signal.getsignal(signal.SIGTERM)
                 signal.signal(signal.SIGTERM, _handle_sigterm)
@@ -275,7 +291,7 @@ class NagiosCheck(object):
                     print("%s\n" % msg, file=self.err)
                 self.parser.print_usage()
                 self.exit_cb(2)
-            except Status as e:
+            except Status:
                 raise
             except SystemExit as e:
                 self.exit_cb(e.code)
@@ -284,8 +300,9 @@ class NagiosCheck(object):
                              "Unhandled Python exception: %r" % e)
             self.exit_cb(Status.EXIT_UNKNOWN)
         except Status as s:
-            print(s.output(self.verbosity), file=self.out)
+            print(s.output(verbosity), file=self.out)
             self.exit_cb(s.status)
+
 
 class PerformanceMetric(object):
     """Stores individual performance data (perfdata) metrics.
@@ -294,6 +311,7 @@ class PerformanceMetric(object):
     parameter to Status to include perfdata in your check output.
 
     """
+
     def __init__(self, label, value, unit="", warning_threshold="",
                  critical_threshold="", minimum="", maximum=""):
         self.label = label
@@ -321,11 +339,12 @@ class PerformanceMetric(object):
                  self.warning_threshold, self.critical_threshold,
                  self.minimum, self.maximum))
 
-def _handle_sigterm(signum, frame):
-    checks = filter(lambda o: isinstance(o, NagiosCheck),
-                    gc.get_objects())
+
+def _handle_sigterm(signum, frame):  # pylint: disable=W0613
+    checks = [o for o in gc.get_objects() if isinstance(o, NagiosCheck)]
     for check in checks:
         check.expired()
+
 
 def prettyprint_seconds_elapsed(seconds):
     return str(datetime.timedelta(seconds=seconds))
