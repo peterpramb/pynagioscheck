@@ -14,7 +14,7 @@ import signal
 import sys
 import traceback
 
-__version__ = '0.1.6'
+__version__ = '0.2.0'
 
 
 class Status(Exception):
@@ -230,7 +230,7 @@ class NagiosCheck(object):
                                dest='verbosity')
 
     def add_option(self, short, long=None, argument=False, desc=None,
-                   type=None, default=None, choices=None, meta=None):
+                   vtype=None, default=None, choices=None, meta=None):
         option_strings = []
         kwargs = {}
 
@@ -245,7 +245,7 @@ class NagiosCheck(object):
             kwargs['dest'] = argument
 
         kwargs['help'] = desc
-        kwargs['type'] = type
+        kwargs['type'] = vtype
         kwargs['default'] = default
         kwargs['choices'] = choices
         kwargs['metavar'] = meta

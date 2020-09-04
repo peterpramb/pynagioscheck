@@ -6,7 +6,7 @@ import sys
 if sys.version_info < (2, 6) or \
         (sys.version_info >= (3,) and sys.version_info < (3, 4)):
     error = """
-Pynagioscheck 0.1.7+ requires Python 2 >= 2.6, or Python 3 >= 3.4.
+Pynagioscheck 0.2.0+ requires Python 2 >= 2.6, or Python 3 >= 3.4.
 Older Python versions were supported up to pynagioscheck 0.1.6.
 
 Python %s detected.

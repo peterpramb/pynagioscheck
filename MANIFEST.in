@@ -1,4 +1,4 @@
-include LICENSE.txt pyproject.toml
+include AUTHORS.txt CHANGELOG.rst LICENSE.txt pyproject.toml
 graft dist
 graft examples
 graft tests

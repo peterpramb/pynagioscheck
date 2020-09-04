@@ -1,0 +1,8 @@
+Pynagioscheck was developed by Saj Goonatilleke [1]. While the original
+project repository is not available anymore, a copy is available at [2].
+
+This project fork [3] is currently maintained by Peter Pramberger.
+
+[1] https://github.com/saj/pynagioscheck
+[2] https://github.com/PeerJ/pynagioscheck
+[3] https://github.com/peterpramb/pynagioscheck
